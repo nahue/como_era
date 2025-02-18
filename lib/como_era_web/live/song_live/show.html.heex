@@ -1,0 +1,33 @@
+<.header>
+  Song {@song.id}
+  <:subtitle>This is a song record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/songs/#{@song}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit song</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@song.name}</:item>
+</.list>
+  <div class="prose" :if={@song.notes}>{raw @notes_markdown}</div>
+
+<.back navigate={~p"/songs"}>Back to songs</.back>
+
+<.modal :if={@live_action == :edit} id="song-modal" show on_cancel={JS.patch(~p"/songs/#{@song}")}>
+  <.live_component
+    module={ComoEraWeb.SongLive.FormComponent}
+    id={@song.id}
+    title={@page_title}
+    action={@live_action}
+    song={@song}
+    patch={~p"/songs/#{@song}"}
+  />
+</.modal>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script>
+const easyMDE = new EasyMDE();
+</script>

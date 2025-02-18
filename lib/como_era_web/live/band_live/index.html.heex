@@ -1,0 +1,41 @@
+<.header>
+  Listing Bands
+  <:actions>
+    <.link patch={~p"/bands/new"}>
+      <.button>New Band</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="bands"
+  rows={@streams.bands}
+  row_click={fn {_id, band} -> JS.navigate(~p"/bands/#{band}") end}
+>
+  <:col :let={{_id, band}} label="Name">{band.name}</:col>
+  <:action :let={{_id, band}}>
+    <div class="sr-only">
+      <.link navigate={~p"/bands/#{band}"}>Show</.link>
+    </div>
+    <.link patch={~p"/bands/#{band}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, band}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: band.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="band-modal" show on_cancel={JS.patch(~p"/bands")}>
+  <.live_component
+    module={ComoEraWeb.BandLive.FormComponent}
+    id={@band.id || :new}
+    title={@page_title}
+    action={@live_action}
+    band={@band}
+    patch={~p"/bands"}
+  />
+</.modal>

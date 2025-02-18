@@ -1,0 +1,26 @@
+<.header>
+  Band {@band.id}
+  <:subtitle>This is a band record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/bands/#{@band}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit band</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@band.name}</:item>
+</.list>
+
+<.back navigate={~p"/bands"}>Back to bands</.back>
+
+<.modal :if={@live_action == :edit} id="band-modal" show on_cancel={JS.patch(~p"/bands/#{@band}")}>
+  <.live_component
+    module={ComoEraWeb.BandLive.FormComponent}
+    id={@band.id}
+    title={@page_title}
+    action={@live_action}
+    band={@band}
+    patch={~p"/bands/#{@band}"}
+  />
+</.modal>
