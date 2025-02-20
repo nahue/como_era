@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "easymde": "^2.19.0",
-    "trix": "^2.1.12"
+    "easymde": "^2.19.0"
   }
 }

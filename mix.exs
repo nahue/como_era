@@ -74,7 +74,7 @@ defmodule ComoEra.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
+      "assets.setup": ["cmd --cd assets npm install", "tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind como_era", "esbuild como_era"],
       "assets.deploy": [
         "tailwind como_era --minify",
