@@ -12,8 +12,12 @@
   rows={@streams.songs}
   row_click={fn {_id, song} -> JS.navigate(~p"/songs/#{song}") end}
 >
-  <:col :let={{_id, song}} label="Name">{song.name}</:col>
-  <:col :let={{_id, song}} label="Band"><span :if={song.band}>{song.band.name}</span></:col>
+  <:col :let={{_id, song}} label="Name">
+    <div class="flex flex-col gap-1">
+      <span class="font-medium">{song.name}</span>
+      <span :if={song.band} class="text-sm text-zinc-500">{song.band.name}</span>
+    </div>
+  </:col>
 
   <:action :let={{_id, song}}>
     <div class="sr-only">
