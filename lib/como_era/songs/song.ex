@@ -17,6 +17,6 @@ defmodule ComoEra.Songs.Song do
   def changeset(song, attrs) do
     song
     |> cast(attrs, [:name, :notes, :band_id])
-    |> validate_required([:name, :notes, :band_id])
+    |> validate_required([:name, :notes])
   end
 end

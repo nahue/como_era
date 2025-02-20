@@ -1,27 +1,45 @@
 defmodule ComoEraWeb.SongLive.FormComponent do
-  use ComoEraWeb, :live_component
+  use ComoEraWeb, :live_view
 
   alias ComoEra.Songs
+
+  @impl true
+  def mount(params, _session, socket) do
+    socket =
+      socket
+      |> assign(:page_title, page_title(socket.assigns.live_action))
+      |> apply_action(socket.assigns.live_action, params)
+
+    {:ok, socket}
+  end
+
+  defp page_title(:show), do: "Show Song"
+  defp page_title(:edit), do: "Edit Song"
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    song = Songs.get_song!(id)
+
+    socket
+    |> assign(:song, song)
+    |> assign(:form, to_form(Songs.change_song(song)))
+  end
 
   @impl true
   def render(assigns) do
     ~H"""
     <div>
       <.header>
-        {@title}
+        {@page_title}
         <:subtitle>Use this form to manage song records in your database.</:subtitle>
       </.header>
 
-      <.simple_form
-        for={@form}
-        id="song-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
+      <.simple_form for={@form} id="song-form" phx-change="validate" phx-submit="save">
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:notes]} type="textarea" label="Notes" id="body-editor"/>
 
+        <div id="song_notes_container" phx-update="ignore">
+          <input type="hidden" name="song[notes]" id="song_notes_input" value={@form[:notes].value} />
+          <trix-editor input="song_notes_input"></trix-editor>
+        </div>
         <:actions>
           <.button phx-disable-with="Saving...">Save Song</.button>
         </:actions>
@@ -31,23 +49,13 @@ defmodule ComoEraWeb.SongLive.FormComponent do
   end
 
   @impl true
-  def update(%{song: song} = assigns, socket) do
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_new(:form, fn ->
-       to_form(Songs.change_song(song))
-     end)}
-  end
-
-  @impl true
   def handle_event("validate", %{"song" => song_params}, socket) do
     changeset = Songs.change_song(socket.assigns.song, song_params)
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
   def handle_event("save", %{"song" => song_params}, socket) do
-    save_song(socket, socket.assigns.action, song_params)
+    save_song(socket, socket.assigns.live_action, song_params)
   end
 
   defp save_song(socket, :edit, song_params) do
@@ -58,7 +66,7 @@ defmodule ComoEraWeb.SongLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Song updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_navigate(to: "/songs/#{song.id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -73,7 +81,7 @@ defmodule ComoEraWeb.SongLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Song created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_navigate(to: "/songs/#{song.id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}

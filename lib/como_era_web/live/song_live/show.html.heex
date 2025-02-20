@@ -2,7 +2,7 @@
   Song {@song.id}
   <:subtitle>This is a song record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/songs/#{@song}/show/edit"} phx-click={JS.push_focus()}>
+    <.link navigate={~p"/songs/#{@song}/show/edit"}>
       <.button>Edit song</.button>
     </.link>
   </:actions>
@@ -25,9 +25,3 @@
     patch={~p"/songs/#{@song}"}
   />
 </.modal>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-<script>
-const easyMDE = new EasyMDE();
-</script>

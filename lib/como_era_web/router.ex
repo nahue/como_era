@@ -31,7 +31,7 @@ defmodule ComoEraWeb.Router do
     live "/songs/:id/edit", SongLive.Index, :edit
 
     live "/songs/:id", SongLive.Show, :show
-    live "/songs/:id/show/edit", SongLive.Show, :edit
+    live "/songs/:id/show/edit", SongLive.FormComponent, :edit
   end
 
   # Other scopes may use custom stacks.
