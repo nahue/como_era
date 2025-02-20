@@ -2,6 +2,6 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import "../../assets/node_modules/trix/dist/trix.css";
+@import "../../assets/node_modules/easymde/dist/easymde.min.css";
 
 /* This file is for your main application CSS */

@@ -18,5 +18,6 @@ defmodule ComoEra.Songs.Song do
     song
     |> cast(attrs, [:name, :notes, :band_id])
     |> validate_required([:name, :notes])
+    |> assoc_constraint(:band)
   end
 end

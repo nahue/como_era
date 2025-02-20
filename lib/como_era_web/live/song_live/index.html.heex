@@ -13,11 +13,13 @@
   row_click={fn {_id, song} -> JS.navigate(~p"/songs/#{song}") end}
 >
   <:col :let={{_id, song}} label="Name">{song.name}</:col>
+  <:col :let={{_id, song}} label="Band"><span :if={song.band}>{song.band.name}</span></:col>
+
   <:action :let={{_id, song}}>
     <div class="sr-only">
       <.link navigate={~p"/songs/#{song}"}>Show</.link>
     </div>
-    <.link patch={~p"/songs/#{song}/edit"}>Edit</.link>
+    <.link navigate={~p"/songs/#{song}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, song}}>
     <.link

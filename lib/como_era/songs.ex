@@ -18,7 +18,7 @@ defmodule ComoEra.Songs do
 
   """
   def list_songs do
-    Repo.all(Song)
+    Repo.all(Song) |> Repo.preload(:band)
   end
 
   @doc """
@@ -35,7 +35,10 @@ defmodule ComoEra.Songs do
       ** (Ecto.NoResultsError)
 
   """
-  def get_song!(id), do: Repo.get!(Song, id)
+  def get_song!(id) do
+    Repo.get!(Song, id)
+    |> Repo.preload(:band)
+  end
 
   @doc """
   Creates a song.

@@ -101,4 +101,8 @@ defmodule ComoEra.Bands do
   def change_band(%Band{} = band, attrs \\ %{}) do
     Band.changeset(band, attrs)
   end
+
+  def band_options do
+    Repo.all(from b in Band, select: {b.name, b.id})
+  end
 end

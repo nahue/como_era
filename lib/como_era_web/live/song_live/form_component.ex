@@ -2,6 +2,8 @@ defmodule ComoEraWeb.SongLive.FormComponent do
   use ComoEraWeb, :live_view
 
   alias ComoEra.Songs
+  alias ComoEra.Songs.Song
+  alias ComoEra.Bands
 
   @impl true
   def mount(params, _session, socket) do
@@ -9,11 +11,11 @@ defmodule ComoEraWeb.SongLive.FormComponent do
       socket
       |> assign(:page_title, page_title(socket.assigns.live_action))
       |> apply_action(socket.assigns.live_action, params)
-
+      |> assign(:bands, Bands.band_options())
     {:ok, socket}
   end
 
-  defp page_title(:show), do: "Show Song"
+  defp page_title(:new), do: "New Song"
   defp page_title(:edit), do: "Edit Song"
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -22,6 +24,12 @@ defmodule ComoEraWeb.SongLive.FormComponent do
     socket
     |> assign(:song, song)
     |> assign(:form, to_form(Songs.change_song(song)))
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:song, %Song{})
+    |> assign(:form, to_form(Songs.change_song(%Song{}, %{})))
   end
 
   @impl true
@@ -35,10 +43,10 @@ defmodule ComoEraWeb.SongLive.FormComponent do
 
       <.simple_form for={@form} id="song-form" phx-change="validate" phx-submit="save">
         <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:band_id]} type="select" label="Band" options={@bands} />
 
-        <div id="song_notes_container" phx-update="ignore">
-          <input type="hidden" name="song[notes]" id="song_notes_input" value={@form[:notes].value} />
-          <trix-editor input="song_notes_input"></trix-editor>
+        <div id="song_notes_container" phx-update="ignore" phx-hook="RichText">
+          <.input type="textarea" field={@form[:notes]} id="song_notes_input" />
         </div>
         <:actions>
           <.button phx-disable-with="Saving...">Save Song</.button>

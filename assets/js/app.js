@@ -21,9 +21,12 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
-import Trix from "trix";
+import EasyMDE from "easymde";
+import {RichText} from "./RichText.hook"
 
-let Hooks = {}
+let Hooks = {
+  RichText
+}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
@@ -32,7 +35,6 @@ let liveSocket = new LiveSocket("/live", Socket, {
   hooks: Hooks
 })
 
-console.log({Hooks})
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
