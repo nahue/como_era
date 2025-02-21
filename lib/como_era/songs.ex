@@ -21,6 +21,19 @@ defmodule ComoEra.Songs do
     Repo.all(Song) |> Repo.preload(:band)
   end
 
+  def filter_songs(filter) do
+    Song
+    |> search_by(filter["q"])
+    |> preload(:band)
+    |> Repo.all()
+  end
+
+  def search_by(query, q) when q in [nil, ""], do: query
+
+  def search_by(query, q) do
+    from s in query, where: like(s.name, ^"%#{q}%")
+  end
+
   @doc """
   Gets a single song.
 

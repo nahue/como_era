@@ -6,12 +6,16 @@ defmodule ComoEraWeb.SongLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :songs, Songs.list_songs())}
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    socket =
+      socket
+      |> apply_action(socket.assigns.live_action, params)
+      |> assign(:form, to_form(params))
+    {:noreply, socket}
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -26,10 +30,11 @@ defmodule ComoEraWeb.SongLive.Index do
     |> assign(:song, %Song{})
   end
 
-  defp apply_action(socket, :index, _params) do
+  defp apply_action(socket, :index, params) do
     socket
     |> assign(:page_title, "Listing Songs")
     |> assign(:song, nil)
+    |> stream(:songs, Songs.filter_songs(params), reset: true)
   end
 
   @impl true
@@ -43,5 +48,15 @@ defmodule ComoEraWeb.SongLive.Index do
     {:ok, _} = Songs.delete_song(song)
 
     {:noreply, stream_delete(socket, :songs, song)}
+  end
+
+  def handle_event("search", params, socket) do
+    params =
+      params
+      |> Map.take(~w(q))
+      |> Map.reject(fn {_, v} -> v == "" end)
+
+    socket = push_patch(socket, to: ~p"/songs?#{params}")
+    {:noreply, socket}
   end
 end
