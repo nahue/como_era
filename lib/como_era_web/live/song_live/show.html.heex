@@ -11,9 +11,20 @@
 <.list>
   <:item title="Name">{@song.name}</:item>
 </.list>
-  <div class="prose" :if={@song.notes}>{raw @notes_markdown}</div>
+<div :if={@song.notes} class="prose">{raw(@notes_markdown)}</div>
 
-<.back navigate={~p"/songs"}>Back to songs</.back>
+<footer class="fixed bottom-0 left-0 right-0 p-4 flex gap-4 justify-between items-center mt-4">
+  <div class="flex flex-1">
+    <.link :if={@previous_song} navigate={~p"/songs/#{@previous_song}"}>
+      <.button><.icon name="hero-arrow-left-solid" class="h-3 w-3 px-2" />Previous song</.button>
+    </.link>
+  </div>
+  <div class="flex flex-1 justify-end">
+    <.link :if={@next_song} navigate={~p"/songs/#{@next_song}"}>
+      <.button>Next song<.icon name="hero-arrow-right-solid" class="h-3 w-3 px-2" /></.button>
+    </.link>
+  </div>
+</footer>
 
 <.modal :if={@live_action == :edit} id="song-modal" show on_cancel={JS.patch(~p"/songs/#{@song}")}>
   <.live_component

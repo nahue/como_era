@@ -10,7 +10,7 @@
 <section class="grid grid-cols-2 gap-4 mt-4">
   <.form for={@form} id="filter-songs" phx-change="search" phx-submit="search">
   <div class="flex flex-col gap-2">
-    <input phx-debounce="1000" type="text" name="q" placeholder="Search..." class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+    <input phx-debounce="300" type="text" name="q" placeholder="Search..." class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
   </div>
   </.form>
 </section>

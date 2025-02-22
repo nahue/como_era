@@ -35,7 +35,7 @@ defmodule ComoEra.Songs do
   end
 
   @doc """
-  Gets a single song.
+  Getsje song.
 
   Raises `Ecto.NoResultsError` if the Song does not exist.
 
@@ -117,4 +117,49 @@ defmodule ComoEra.Songs do
   def change_song(%Song{} = song, attrs \\ %{}) do
     Song.changeset(song, attrs)
   end
+
+  @doc """
+  Gets the next song ordered by ID.
+  Returns nil if there is no next song.
+
+  ## Examples
+
+      iex> get_next_song(1)
+      %Song{}
+
+      iex> get_next_song(999)
+      nil
+
+  """
+  def get_next_song(current_id) do
+    from(s in Song,
+      where: s.id > ^current_id,
+      order_by: [asc: s.id],
+      limit: 1)
+    |> Repo.one()
+    |> Repo.preload(:band)
+  end
+
+  @doc """
+  Gets the previous song ordered by ID.
+  Returns nil if there is no previous song.
+
+  ## Examples
+
+      iex> get_previous_song(2)
+      %Song{}
+
+      iex> get_previous_song(1)
+      nil
+
+  """
+  def get_previous_song(current_id) do
+    from(s in Song,
+      where: s.id < ^current_id,
+      order_by: [desc: s.id],
+      limit: 1)
+    |> Repo.one()
+    |> Repo.preload(:band)
+  end
+
 end
