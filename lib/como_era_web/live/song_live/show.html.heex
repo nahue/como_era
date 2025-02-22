@@ -13,7 +13,7 @@
 </.list>
 <div :if={@song.notes} class="prose">{raw(@notes_markdown)}</div>
 
-<footer class="fixed bottom-0 left-0 right-0 p-4 flex gap-4 justify-between items-center mt-4">
+<footer class="fixed bottom-0 mx-auto max-w-2xl left-0 right-0 p-4 flex gap-4 justify-between items-center mt-4">
   <div class="flex flex-1">
     <.link :if={@previous_song} navigate={~p"/songs/#{@previous_song}"}>
       <.button><.icon name="hero-arrow-left-solid" class="h-3 w-3 px-2" />Previous song</.button>
